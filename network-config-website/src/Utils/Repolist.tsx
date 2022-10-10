@@ -20,7 +20,7 @@ function RepoList(props : props) {
     return (
         <ListGroup>
             {Repositories.map((Repository) => {
-                return (<ListGroup.Item >{Repository}</ListGroup.Item>)
+                return (<ListGroup.Item action href={"/config/" + Repository}>{Repository}</ListGroup.Item>)
             })}
         </ListGroup>
     );
