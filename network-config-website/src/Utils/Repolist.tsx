@@ -11,16 +11,12 @@ function RepoList(props : props) {
 
     useEffect(() => {
         setRepositories(props.Repositories);
-    }, [props])
-
-    function onClickHadler(e : Event){
-
-    }
+    }, [])
 
     return (
         <ListGroup>
             {Repositories.map((Repository) => {
-                return (<ListGroup.Item action href={"/config/" + Repository}>{Repository}</ListGroup.Item>)
+                return (<ListGroup.Item action key={Repository} href={"/config/" + Repository}>{Repository}</ListGroup.Item>)
             })}
         </ListGroup>
     );
