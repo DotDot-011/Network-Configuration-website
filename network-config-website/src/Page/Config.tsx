@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, MouseEvent } from 'react';
 import logo from '../logo.svg';
 import MyNavbar from '../Utils/Navbar';
 import RepoList from '../Utils/Repolist';
@@ -46,7 +46,7 @@ function Config() {
                 <>
                   <strong>{Point.host}</strong>
                 </>
-              ),
+              )
             },
             position: { x: 250 * ( index + 1 ), y: 0 },
           }
@@ -84,6 +84,11 @@ function Config() {
         [setEdges]
       );
 
+    function onNodeClick(event: MouseEvent, node: Node){
+        const Point = AccessPoints[parseInt(node.id)]
+        console.log(Point)
+    }
+
     let {id} = useParams();
 
     return (
@@ -98,6 +103,7 @@ function Config() {
                     onNodesChange={onNodesChange}
                     onEdgesChange={onEdgesChange}
                     onConnect={onConnect}
+                    onNodeClick={onNodeClick}
                     fitView
                     fitViewOptions={fitViewOptions}
                     />
