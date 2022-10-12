@@ -1,0 +1,18 @@
+.react-flow{
+    width: 50% !important;
+    height: 80% !important;
+    /* position: fixed !important; */
+    overflow: hidden;
+    background: beige;
+    border: black;
+    margin-top: 3%;
+}
+
+.Connection{
+    display: flex;
+    height: 1000px;
+    width: 100%;
+    flex-wrap: wrap;
+    align-content: stretch;
+    justify-content: space-around;
+}

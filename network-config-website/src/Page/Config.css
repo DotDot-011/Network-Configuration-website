@@ -1,18 +1,10 @@
-.react-flow{
-    width: 50% !important;
-    height: 80% !important;
-    /* position: fixed !important; */
-    overflow: hidden;
-    background: beige;
-    border: black;
-    margin-top: 3%;
+ 
+.Function-List{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
-.Connection{
-    display: flex;
-    height: 1000px;
-    width: 100%;
-    flex-wrap: wrap;
-    align-content: stretch;
-    justify-content: space-around;
+.btn{
+    margin-top: 3px;
 }

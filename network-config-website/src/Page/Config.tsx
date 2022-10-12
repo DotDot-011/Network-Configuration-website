@@ -1,112 +1,78 @@
-import React, { useEffect, useState, useCallback, MouseEvent } from 'react';
+import React, { useState } from 'react';
+import { Button } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
 import logo from '../logo.svg';
 import MyNavbar from '../Utils/Navbar';
 import RepoList from '../Utils/Repolist';
-import { useParams } from "react-router-dom";
-import 'reactflow/dist/style.css';
 import './Config.css'
+import GetConfigModal from '../Utils/GetConfigModal';
+import {GetFile, GetFilePath} from '../API/API'
 
-import ReactFlow, {
-    addEdge,
-    useNodesState,
-    useEdgesState,
-    Node,
-    Edge,
-    Connection,
-    EdgeChange,
-    NodeChange,
-    applyEdgeChanges,
-    applyNodeChanges,
-    FitViewOptions
-  } from 'reactflow';
-
-enum AvailableDevice {
-    cisco = "cisco_ios",
-    dell = "dell_os6",
-    huawei = "huawei",
-    zyxel = "zyxel_os"
-}
+type  AvailableDevice = "cisco_ios" | "dell_os6" | "huawei" | "zyxel_os"
 
 interface AccessPoint{
-    device_type : AvailableDevice;
-    host : string;
+    device_type : AvailableDevice | undefined;
+    host : string | undefined;
 }
 
 function Config() {
-    
-    const [AccessPoints, SetAccessPoints] = useState<Array<AccessPoint>>([{device_type : AvailableDevice.cisco, host :'1.1.1.1'}, {device_type : AvailableDevice.cisco, host :'192.168.1.239'}])
-    const [Repositories, setRepositories] = useState<Array<string>>(['RepoTest01', 'RepoTest02'])
 
-    const initialNodes: Array<Node> = AccessPoints.map((Point, index)=> {
-        return {
-            id: index.toString(),
-            type: 'default',
-            data: {
-              label: (
-                <>
-                  <strong>{Point.host}</strong>
-                </>
-              )
-            },
-            position: { x: 250 * ( index + 1 ), y: 0 },
-          }
-    })
+    const {id} = useParams();
+    const {host} = useParams();
+    const {device}= useParams(); 
+    const device_type: AvailableDevice = device as AvailableDevice;
 
-    useEffect(() => {
-        console.log(nodes)
-    }
-    ,[])
+    const [isGetConfig, setIsGetConfig] = useState(false)
+    const [Port, setPort] = useState("22")
+    const [Username, setUsername] = useState("")
+    const [Password, setPassword] = useState("")
 
-    const initialEdges: Array<Edge> = [  { id: 'e0-1',
-                    source: '0',
-                    target: '1',
-                    }]
-
-    const [nodes, setNodes] = useNodesState(initialNodes);
-    const [edges, setEdges] = useEdgesState(initialEdges);
-
-    const fitViewOptions: FitViewOptions = {
-        padding: 0.2,
-      };
-
-    const onNodesChange = useCallback(
-        (changes: NodeChange[]) => setNodes((nds) => applyNodeChanges(changes, nds)),
-        [setNodes]
-      );
-
-    const onEdgesChange = useCallback(
-    (changes: EdgeChange[]) => setEdges((eds) => applyEdgeChanges(changes, eds)),
-    [setEdges]
-    );
-
-    const onConnect = useCallback(
-        (connection: Connection) => setEdges((eds) => addEdge(connection, eds)),
-        [setEdges]
-      );
-
-    function onNodeClick(event: MouseEvent, node: Node){
-        const Point = AccessPoints[parseInt(node.id)]
-        console.log(Point)
+    async function GetConfig(){
+        const filename = await GetFilePath(device_type, host, Username, Password, id)
+        console.log(filename)
+        await GetFile(filename)
     }
 
-    let {id} = useParams();
+    function UploadConfig(){
+        console.log("Uploadconfig")
+    }
+
+    function handleShowGetConfig(){
+        setIsGetConfig(true)
+    }
+
+    function handleCloseGetConfig(){
+        setIsGetConfig(false)
+    }
+
+    function handleChangePort(event: React.ChangeEvent<HTMLInputElement>){
+        setPort(event.target.value)
+    }
+
+    function handleChangeUsername(event: React.ChangeEvent<HTMLInputElement>){
+        setUsername(event.target.value)
+    }
+
+    function handleChangePassword(event: React.ChangeEvent<HTMLInputElement>){
+        setPassword(event.target.value)
+    }
 
     return (
         <div>
             <MyNavbar></MyNavbar>
             <div className='content'>
-                <RepoList Repositories = {Repositories}></RepoList>
-                <div className="Connection">
-                    <ReactFlow
-                    nodes={nodes}
-                    edges={edges}
-                    onNodesChange={onNodesChange}
-                    onEdgesChange={onEdgesChange}
-                    onConnect={onConnect}
-                    onNodeClick={onNodeClick}
-                    fitView
-                    fitViewOptions={fitViewOptions}
-                    />
+                <RepoList Repositories = {['RepoTest01', 'RepoTest02']}></RepoList>
+                <div className="Config-menu">
+                <header className="Config-menu-header">
+                    <h1>Host: {host}</h1>
+                    <h1>Device: {device}</h1>
+                    
+                    <div className='Function-List'>
+                        <Button onClick={handleShowGetConfig}>Get Config</Button>
+                        <Button onClick={UploadConfig}>Upload Config</Button>
+                    </div>
+                    <GetConfigModal isShow={isGetConfig} host={host} device={device_type} handleClose={handleCloseGetConfig} handleShow={handleShowGetConfig} handleConfirm={GetConfig} handlePasswordChange={handleChangePassword} handleUsernameChange={handleChangeUsername} handlePortChange={handleChangePort}></GetConfigModal>
+                </header>
                 </div>
             </div>
         </div>
