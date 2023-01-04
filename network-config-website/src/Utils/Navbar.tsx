@@ -6,9 +6,10 @@ function MyNavbar() {
     <>
         <Navbar expand="lg" bg="dark" variant="dark">
             <Container>
-                <Navbar.Brand >Home</Navbar.Brand>
+                <Navbar.Brand href='/home'>Home</Navbar.Brand>
+                <Navbar.Brand href='/createRepo'>Create Repository</Navbar.Brand>
                 <Navbar.Collapse className="justify-content-end">
-                <Navbar.Brand >Signed out</Navbar.Brand>
+                <Navbar.Brand href='/login'>Signed out</Navbar.Brand>
                 </Navbar.Collapse >
             </Container>
         </Navbar>

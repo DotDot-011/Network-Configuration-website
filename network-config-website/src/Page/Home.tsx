@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from '../logo.svg';
 import '../App.css';
 import './Home.css'
@@ -8,11 +8,19 @@ import { isPropertySignature } from 'typescript';
 
 function Home() {
 
+    const [repositories, setRepositories] = useState(['RepoTest01', 'RepoTest02'])
+
+    useEffect(()=> {
+        
+        
+
+    }, [])
+
     return (
         <div>
             <MyNavbar></MyNavbar>
             <div className='content'>
-                <RepoList Repositories = {['RepoTest01', 'RepoTest02']}></RepoList>
+                <RepoList Repositories = {repositories}></RepoList>
                 <div className="App">
                 <header className="App-header">
                     
