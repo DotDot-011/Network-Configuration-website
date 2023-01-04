@@ -5,6 +5,7 @@ import RepoList from '../Utils/Repolist';
 import { useParams } from "react-router-dom";
 import 'reactflow/dist/style.css';
 import './Topology.css'
+import { GetRepoNames } from '../API/API';
 
 import ReactFlow, {
     addEdge,
@@ -32,10 +33,59 @@ interface AccessPoint{
     host : string;
 }
 
+interface RepoTag {
+  repositoryName: string,
+  repositoryId: number
+}
+
+interface RepoInfo {
+  repositoryDeviceType: string
+  repositoryHost: string
+  repositoryId: number
+  repositoryName: string
+  repositoryOwnerName: string
+  repositoryTimestamp: Date
+
+}
+
 function Topology() {
     
-    const [AccessPoints, SetAccessPoints] = useState<Array<AccessPoint>>([{device_type : AvailableDevice.cisco, host :'1.1.1.1'}, {device_type : AvailableDevice.cisco, host :'192.168.1.239'}])
-    const [Repositories, setRepositories] = useState<Array<string>>(['RepoTest01', 'RepoTest02'])
+    const [AccessPoints, setAccessPoints] = useState<Array<AccessPoint>>([{device_type : AvailableDevice.cisco, host :'1.1.1.1'}, {device_type : AvailableDevice.cisco, host :'192.168.1.239'}])
+    const [Repositories, setRepositories] = useState<Array<RepoInfo>>([])
+
+    useEffect(()=> {
+        
+      DownloadRepoNames()
+  }, [])
+
+  let {id} = useParams();
+  
+  useEffect(()=> {
+
+    const temp = Repositories.find(repository => repository.repositoryId === Number(id));
+
+    if(temp !== undefined)
+    {
+      const Point: AccessPoint = {device_type : temp.repositoryDeviceType as AvailableDevice, host : temp.repositoryHost}
+      setAccessPoints([Point])
+    }
+
+  }, [Repositories])
+
+  async function DownloadRepoNames()
+  {
+      const username = localStorage.getItem("username")
+      const response = await GetRepoNames(username)
+      
+      if(response.state === false)
+      {
+          alert(response.data)
+          window.location.replace("/login")
+      }
+      
+      console.log(response.data)
+      setRepositories(response.data)
+  }
 
     const initialNodes: Array<Node> = AccessPoints.map((Point, index)=> {
         return {
@@ -80,17 +130,29 @@ function Topology() {
       );
 
     useEffect(() => {
-        console.log(nodes)
+        setNodes(AccessPoints.map((Point, index)=> {
+          return {
+              id: index.toString(),
+              type: 'default',
+              data: {
+                label: (
+                  <>
+                    <strong>{Point.host}</strong>
+                  </>
+                )
+              },
+              position: { x: 250 * ( index + 1 ), y: 0 },
+            }
+      }))
+
     }
-    ,[])
+    ,[AccessPoints])
 
     function onNodeClick(event: MouseEvent, node: Node){
         const Point = AccessPoints[parseInt(node.id)]
         console.log(Point)
         window.location.assign('/config/' + id + '/host/' + Point.host + '/' + Point.device_type)
     }
-
-    let {id} = useParams();
 
     return (
         <div>

@@ -5,7 +5,9 @@ import './Home.css'
 import MyNavbar from '../Utils/Navbar';
 import RepoList from '../Utils/Repolist';
 import { isPropertySignature } from 'typescript';
-import { GetRepoNames } from '../API/API';
+import { GetRepoNames, GetFileConfig } from '../API/API';
+import Highlight from 'react-highlight';
+import { useParams } from 'react-router-dom';
 
 interface RepoTag {
     repositoryName: string,
@@ -22,13 +24,16 @@ interface RepoInfo {
 
 }
 
-function Home() {
+function ShowFile() {
 
     const [repositories, setRepositories] = useState<Array<RepoInfo>>([])
+    const {fileId} = useParams()
+    const [config, setConfig] = useState("")
 
     useEffect(()=> {
         
         DownloadRepoNames()
+        DownloadConfig()
     }, [])
 
     useEffect(()=> {
@@ -52,6 +57,23 @@ function Home() {
         setRepositories(response.data)
     }
 
+    async function DownloadConfig() {
+    
+        const username = localStorage.getItem("username")
+        if(fileId !== undefined){
+            const response = await GetFileConfig(username, parseInt(fileId)) 
+            if(response.state === false)
+            {
+                alert(response.data)
+                window.location.replace("/login")
+            }
+            
+            console.log(response.data)
+            setConfig(response.data.fileData)
+        }
+    
+      }
+
     return (
         <div>
             <MyNavbar></MyNavbar>
@@ -60,26 +82,10 @@ function Home() {
                     const repo: RepoTag = {repositoryId: repository.repositoryId, repositoryName: repository.repositoryName};
                     return repo
             })}></RepoList>
-                <div className="App">
-                <header className="App-header">
-                    
-                    <img src={logo} className="App-logo" alt="logo" />
-                    <p>
-                    Edit <code>src/App.tsx</code> and save to reload.
-                    </p>
-                    <a
-                    className="App-link"
-                    href="https://reactjs.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    >
-                    Learn React
-                    </a>
-                </header>
-                </div>
+                <Highlight className='cisco'>{config}</Highlight>
             </div>
         </div>
     );
 }
 
-export default Home;
+export default ShowFile;

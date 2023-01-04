@@ -78,6 +78,56 @@ export async function PostRepo( repositoryName : string,
 
 }
 
+export async function GetRepoNames(username: string | null){
+
+    const path = Url + "getRepositories/" + username
+
+    const config = {
+        headers: {
+          TOKEN: localStorage.getItem('TOKEN'),
+        }
+      }
+
+    const response = await axios.get(path, config)
+    
+    console.log(response)
+    
+    return response.data
+}
+
+export async function GetFileConfig(username: string | null, fileId: number){
+    const path = Url + "getFile/" + username + "/" + fileId
+
+    const config = {
+        headers: {
+          TOKEN: localStorage.getItem('TOKEN'),
+        }
+      }
+
+    const response = await axios.get(path, config)
+    
+    console.log(response)
+    
+    return response.data
+}
+
+export async function GetFileNames(username: string | null, repository: string){
+
+    const path = Url + "getFileNames/" + username + "/" + repository
+
+    const config = {
+        headers: {
+          TOKEN: localStorage.getItem('TOKEN'),
+        }
+      }
+
+    const response = await axios.get(path, config)
+    
+    console.log(response)
+    
+    return response.data
+}
+
 export async function GetFilePath(
     device_type: AvailableDevice,
     host: string | undefined,

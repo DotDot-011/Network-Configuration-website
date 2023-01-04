@@ -5,6 +5,7 @@ import Topology from "./Page/Topology";
 import Config from "./Page/Config";
 import LoginPage from "./Page/Login";
 import CreateRepository from "./Page/CreateRepo";
+import ShowFile from "./Page/ShowFile";
 
 export default function PageRouter() {
   return (
@@ -17,6 +18,7 @@ export default function PageRouter() {
           <Route path="/config/:id" element={<Topology />}></Route>
           <Route path="/config" element= {<Navigate to = '/home'></Navigate>} />
           <Route path="/config/:id/host/:host/:device" element={<Config />}></Route>
+          <Route path="/file/:fileId" element={<ShowFile />}></Route>
         </Routes>
       </div>
     </Router>
