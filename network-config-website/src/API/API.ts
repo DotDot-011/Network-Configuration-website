@@ -152,3 +152,64 @@ export async function GetFilePath(
     return response.data
 
 }
+
+export async function GetConfig(
+    device_type: AvailableDevice,
+    host: string | undefined,
+    AccessPointUsername: string,
+    password: string,
+    username: string | null,
+    Repository: number | undefined ){
+
+    const path = Url + "getConfig"
+
+    const response = await axios.post(path, {
+        AccessPoint: {
+            device_type: device_type,
+            host: host,
+            username: AccessPointUsername,
+            password: password,
+          },
+          username: username,
+          Repository: Repository
+    })
+    
+    console.log(response)
+    
+    return response.data
+}
+
+export async function UploadConfig(
+  filename: string,
+  filedata: string,
+  device_type: AvailableDevice,
+  host: string | undefined,
+  AccessPointUsername: string,
+  password: string,
+  username: string | null,
+  Repository: number | undefined ){
+
+  const path = Url + "uploadConfig"
+
+  const response = await axios.post(path, {
+    file: {
+      name: filename,
+      data: filedata,
+      fileType: device_type
+    },
+    hostObject:{
+      AccessPoint: {
+          device_type: device_type,
+          host: host,
+          username: AccessPointUsername,
+          password: password,
+        },
+        username: username,
+        Repository: Repository
+    }
+  })
+  
+  console.log(response)
+  
+  return response.data
+}

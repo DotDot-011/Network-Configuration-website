@@ -13,23 +13,22 @@ interface props{
     handleShow : (() => void)
     handleConfirm : (() => void)
     handlePortChange : ((e: React.ChangeEvent<HTMLInputElement>) => void)
+    handleFileChange : ((e: React.ChangeEvent<HTMLInputElement>) => void)
     handleUsernameChange : ((e: React.ChangeEvent<HTMLInputElement>) => void)
     handlePasswordChange : ((e : React.ChangeEvent<HTMLInputElement>) => void)
 }
 
-function GetConfigModal(props: props) {
+function UploadConfigModal(props: props) {
 
   return (
     <>
-        <Modal show={props.isShow} onHide={props.handleClose}>
+        <Modal show={props.isShow} onHide={props.handleClose} onChange={props.handleFileChange}>
             <Modal.Header closeButton>
             <Modal.Title>Modal heading</Modal.Title>
             </Modal.Header>
-            <Modal.Body>{props.config !== '' ? <Highlight className='cisco'>{props.config}</Highlight> : 'Do you wanna get config?'}</Modal.Body>
+            <Modal.Body><input type="file" name="file" /></Modal.Body>
             <Modal.Footer>
             <Form>
-                { props.config !== '' ? <></> :
-                (<>
                 <Form.Group as={Row} className="mb-3" controlId="formPlaintextHost">
                     <Form.Label column sm="2">
                     Host
@@ -74,8 +73,6 @@ function GetConfigModal(props: props) {
                     <Form.Control onChange={(e : React.ChangeEvent<HTMLInputElement>) => {props.handlePortChange(e)}} type="input" value={22} />
                     </Col>
                 </Form.Group>
-                </>)
-                }
 
                 <Button variant="secondary" onClick={props.handleClose}>
                     Close
@@ -91,4 +88,4 @@ function GetConfigModal(props: props) {
   );
 }
 
-export default GetConfigModal;
+export default UploadConfigModal;

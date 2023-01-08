@@ -6,9 +6,10 @@ import MyNavbar from '../Utils/Navbar';
 import RepoList from '../Utils/Repolist';
 import './Config.css'
 import GetConfigModal from '../Utils/GetConfigModal';
-import {GetFile, GetFilePath, GetRepoNames, GetFileNames} from '../API/API'
+import {GetFile, GetFilePath, GetRepoNames, GetFileNames, GetConfig, UploadConfig} from '../API/API'
 import FileTable from '../Utils/FileTable';
 import PageNav from '../Utils/PageNav';
+import UploadConfigModal from '../Utils/UploadConfigModal';
 
 type  AvailableDevice = "cisco_ios" | "dell_os6" | "huawei" | "zyxel_os"
 
@@ -43,12 +44,11 @@ function Config() {
     const [Port, setPort] = useState("22")
     const [Username, setUsername] = useState("")
     const [Password, setPassword] = useState("")
+    const [config, setConfig] = useState("")
+    const [isUploadConfig, setIsUploadConfig] = useState(false)
+    const [toBeUploadedFile, setToBeUploadedFile] = useState<File>()
+    const [toBeUploadedFileContent, setToBeUploadedFileContent] = useState("")
 
-    async function GetConfig(){
-        const filename = await GetFilePath(device_type, host, Username, Password, id)
-        console.log(filename)
-        await GetFile(filename)
-    }
     const [currentPage, setCurrentPage] = useState(1);
     const [files, setFiles] = useState([])
     const totalPages = Math.ceil(files.length / 10);
@@ -98,16 +98,22 @@ function Config() {
         setRepositories(response.data)
     }
 
-    function UploadConfig(){
-        console.log("Uploadconfig")
-    }
-
     function handleShowGetConfig(){
         setIsGetConfig(true)
     }
 
     function handleCloseGetConfig(){
         setIsGetConfig(false)
+        setConfig("")
+    }
+
+    function handleShowUploadConfig(){
+        setIsUploadConfig(true)
+    }
+
+    function handleCloseUploadConfig(){
+        setIsUploadConfig(false)
+        setConfig("")
     }
 
     function handleChangePort(event: React.ChangeEvent<HTMLInputElement>){
@@ -125,6 +131,42 @@ function Config() {
     function handlePageChange(page: number){
         setCurrentPage(page);
       };
+    
+    async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>){
+
+        if(event.target.files !== null)
+        {
+            const content = await event.target.files[0].text()
+            console.log(event.target.files[0])
+            setToBeUploadedFile(event.target.files[0])
+            setToBeUploadedFileContent(content)
+        }
+    }
+
+    async function handleConfirm(){
+        
+        const userId = localStorage.getItem("username")
+        if(id !== undefined){
+            const response = await GetConfig(device_type, host, Username, Password, userId, parseInt(id))
+            setConfig(response.data)
+        }
+        
+    }
+
+    async function handleUploadConfig(){
+
+        console.log("upload")
+        const userId = localStorage.getItem("username")
+        if(toBeUploadedFile === undefined){
+            alert("There is no file")
+            return
+        }
+
+        if(id !== undefined){
+            const response = await UploadConfig(toBeUploadedFile.name, toBeUploadedFileContent,device_type, host, Username, Password, userId, parseInt(id))
+            setConfig(response.data)
+        }
+    }
 
     return (
         <div>
@@ -142,9 +184,10 @@ function Config() {
                     <PageNav totalPages={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />
                     <div className='Function-List'>
                         <Button onClick={handleShowGetConfig}>Get Config</Button>
-                        <Button onClick={UploadConfig}>Upload Config</Button>
+                        <Button onClick={handleShowUploadConfig}>Upload Config</Button>
                     </div>
-                    <GetConfigModal isShow={isGetConfig} host={host} device={device_type} handleClose={handleCloseGetConfig} handleShow={handleShowGetConfig} handleConfirm={GetConfig} handlePasswordChange={handleChangePassword} handleUsernameChange={handleChangeUsername} handlePortChange={handleChangePort}></GetConfigModal>
+                    <GetConfigModal config={config} isShow={isGetConfig} host={host} device={device_type} handleClose={handleCloseGetConfig} handleShow={handleShowGetConfig} handleConfirm={handleConfirm} handlePasswordChange={handleChangePassword} handleUsernameChange={handleChangeUsername} handlePortChange={handleChangePort}></GetConfigModal>
+                    <UploadConfigModal handleFileChange={handleFileChange} config={config} isShow={isUploadConfig} host={host} device={device_type} handleClose={handleCloseUploadConfig} handleShow={handleShowUploadConfig} handleConfirm={handleUploadConfig} handlePasswordChange={handleChangePassword} handleUsernameChange={handleChangeUsername} handlePortChange={handleChangePort}></UploadConfigModal>
                 </header>
                 </div>
             </div>
