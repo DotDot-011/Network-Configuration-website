@@ -16,3 +16,7 @@
     align-content: stretch;
     justify-content: space-around;
 }
+
+#EnableButton{
+    height: 80px;
+}

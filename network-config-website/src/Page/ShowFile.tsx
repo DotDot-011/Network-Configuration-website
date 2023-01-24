@@ -21,7 +21,8 @@ interface RepoInfo {
     repositoryName: string
     repositoryOwnerName: string
     repositoryTimestamp: Date
-
+    IsSnmpEnable: boolean
+    SnmpCommunity: string
 }
 
 function ShowFile() {

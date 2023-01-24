@@ -15,9 +15,9 @@ function ShowConfigModal(props: props) {
     <>
         <Modal show={props.isShow} onHide={props.handleClose}>
             <Modal.Header closeButton>
-            <Modal.Title>Modal heading</Modal.Title>
+            <Modal.Title>Config</Modal.Title>
             </Modal.Header>
-            <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+            <Modal.Body></Modal.Body>
             <Modal.Footer>
             <Form>
                 <Form.Group as={Row} className="mb-3" controlId="formPlaintextHost">
@@ -25,15 +25,15 @@ function ShowConfigModal(props: props) {
                 </Form.Group>
 
                 <Button variant="secondary" onClick={props.handleClose}>
-                Close
+                    Close
                 </Button>
                 <Button variant="primary" onClick={props.handleConfirm}>
                     Save to Database
                 </Button>
             </Form>
             
-        </Modal.Footer>
-      </Modal>
+          </Modal.Footer>
+        </Modal>
     </>
   );
 }

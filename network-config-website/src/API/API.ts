@@ -128,31 +128,6 @@ export async function GetFileNames(username: string | null, repository: string){
     return response.data
 }
 
-export async function GetFilePath(
-    device_type: AvailableDevice,
-    host: string | undefined,
-    username: string,
-    password: string,
-    Repository: string | undefined ){
-
-    const path = Url + "GetFilePath"
-
-    const response = await axios.post(path, {
-        AccessPoint: {
-            device_type: device_type,
-            host: host,
-            username: username,
-            password: password,
-          },
-          Repository: Repository
-    })
-    
-    console.log(response)
-    
-    return response.data
-
-}
-
 export async function GetConfig(
     device_type: AvailableDevice,
     host: string | undefined,
@@ -160,6 +135,12 @@ export async function GetConfig(
     password: string,
     username: string | null,
     Repository: number | undefined ){
+
+    const config = {
+        headers: {
+          TOKEN: localStorage.getItem('TOKEN'),
+        }
+      }
 
     const path = Url + "getConfig"
 
@@ -172,11 +153,89 @@ export async function GetConfig(
           },
           username: username,
           Repository: Repository
-    })
+    }, config)
     
     console.log(response)
     
     return response.data
+}
+
+export async function UpdateSnmp(  
+  device_type: AvailableDevice,
+  host: string | undefined,
+  AccessPointUsername: string,
+  password: string,
+  username: string | null,
+  Repository: number | undefined,
+  community: string,
+  port: number,
+  secret:string = ""){
+
+  const path = Url + "EnableSnmp"
+
+  const config = {
+      headers: {
+        TOKEN: localStorage.getItem('TOKEN'),
+      }
+    }
+    
+  const response = await axios.post(path, {
+      AccessPoint: {
+        device_type: device_type,
+        host : host,
+        username : AccessPointUsername,
+        password : password,
+        port : port,
+        secret: secret
+      },
+      username : username,
+      Repository : Repository,
+      community: community
+  }, config)
+  
+  console.log(response)
+  
+  return response.data
+
+}
+
+export async function GetInfo(  
+  device_type: AvailableDevice,
+  host: string | undefined,
+  username: string | null,
+  Repository: number | undefined,
+  community: string,
+  port: number = 22,  
+  AccessPointUsername: string = "",
+  password: string = "",
+  secret:string = ""){
+
+  const path = Url + "getInformation"
+
+  const config = {
+      headers: {
+        TOKEN: localStorage.getItem('TOKEN'),
+      }
+    }
+    
+  const response = await axios.post(path, {
+      AccessPoint: {
+        device_type: device_type,
+        host : host,
+        username : AccessPointUsername,
+        password : password,
+        port : port,
+        secret: secret
+      },
+      username : username,
+      Repository : Repository,
+      community: community
+  }, config)
+  
+  console.log(response)
+  
+  return response.data
+
 }
 
 export async function UploadConfig(
@@ -190,6 +249,12 @@ export async function UploadConfig(
   Repository: number | undefined ){
 
   const path = Url + "uploadConfig"
+
+  const config = {
+    headers: {
+      TOKEN: localStorage.getItem('TOKEN'),
+    }
+  }
 
   const response = await axios.post(path, {
     file: {
@@ -207,7 +272,7 @@ export async function UploadConfig(
         username: username,
         Repository: Repository
     }
-  })
+  }, config)
   
   console.log(response)
   

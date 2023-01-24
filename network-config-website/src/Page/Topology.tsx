@@ -5,7 +5,7 @@ import RepoList from '../Utils/Repolist';
 import { useParams } from "react-router-dom";
 import 'reactflow/dist/style.css';
 import './Topology.css'
-import { GetRepoNames } from '../API/API';
+import { GetRepoNames, UpdateSnmp, GetInfo } from '../API/API';
 
 import ReactFlow, {
     addEdge,
@@ -20,6 +20,8 @@ import ReactFlow, {
     applyNodeChanges,
     FitViewOptions
   } from 'reactflow';
+import { Button, Form, Row, Col} from 'react-bootstrap';
+import EnableSnmnpModal from '../Utils/EnableSnmpModal';
 
 enum AvailableDevice {
     cisco = "cisco_ios",
@@ -45,13 +47,29 @@ interface RepoInfo {
   repositoryName: string
   repositoryOwnerName: string
   repositoryTimestamp: Date
+  IsSnmpEnable: boolean
+  SnmpCommunity: string
 
+}
+
+interface HostInfo{
+  uptime: number
+  location: string
+  description: string
 }
 
 function Topology() {
     
     const [AccessPoints, setAccessPoints] = useState<Array<AccessPoint>>([{device_type : AvailableDevice.cisco, host :'1.1.1.1'}, {device_type : AvailableDevice.cisco, host :'192.168.1.239'}])
     const [Repositories, setRepositories] = useState<Array<RepoInfo>>([])
+    const [isSnmpEnable, setIsSnmpEnable] = useState<boolean>(false)
+    const [selectedRepository, setSelectedRepository] = useState<RepoInfo>()
+    const [isEnableSnmpPressed, setIsEnableSnmpPressed] = useState<boolean>(false)
+    const [community, setCommunity] = useState<string>("")
+    const [deviceUsername, setDeviceUsername] = useState<string>("")
+    const [devicePassword, setDevicePassword] = useState<string>("")
+    const [devicePort, setDevicePort] = useState<string>("22")
+    const [hostInfo, setHostInfo] = useState<HostInfo>()
 
     useEffect(()=> {
         
@@ -61,6 +79,15 @@ function Topology() {
   let {id} = useParams();
   
   useEffect(()=> {
+    if(selectedRepository?.IsSnmpEnable)
+    {
+      console.log(selectedRepository)
+      DownloadHostInfo()
+    }
+
+  }, [selectedRepository])
+
+  useEffect(()=> {
 
     const temp = Repositories.find(repository => repository.repositoryId === Number(id));
 
@@ -68,9 +95,25 @@ function Topology() {
     {
       const Point: AccessPoint = {device_type : temp.repositoryDeviceType as AvailableDevice, host : temp.repositoryHost}
       setAccessPoints([Point])
+      setIsSnmpEnable(temp.IsSnmpEnable)
+      setSelectedRepository(temp)
     }
 
   }, [Repositories])
+
+  async function DownloadHostInfo(){
+    if(selectedRepository !== undefined)
+    {
+      const response = await GetInfo(
+        selectedRepository?.repositoryDeviceType as AvailableDevice,
+        selectedRepository?.repositoryHost,
+        localStorage.getItem("username"),
+        selectedRepository?.repositoryId,
+        selectedRepository?.SnmpCommunity)
+      
+      setHostInfo(response.data)
+    }
+  }
 
   async function DownloadRepoNames()
   {
@@ -154,6 +197,45 @@ function Topology() {
         window.location.assign('/config/' + id + '/host/' + Point.host + '/' + Point.device_type)
     }
 
+    function EnableSnmp()
+    {
+      if(selectedRepository === undefined)
+      {
+        console.log("Error")
+        return
+      }
+      
+      setIsEnableSnmpPressed(true)
+    }
+
+    async function handleConfirm(){
+      if(deviceUsername === ""){
+        alert("Please Enter Username")
+        return
+      }
+
+      if(community === ""){
+        alert("Please Enter Community")
+        return
+      }
+
+      const response = await UpdateSnmp(
+        selectedRepository?.repositoryDeviceType as AvailableDevice,
+        selectedRepository?.repositoryHost,
+        deviceUsername,
+        devicePassword,
+        localStorage.getItem("username"),
+        selectedRepository?.repositoryId,
+        community,
+        Number(devicePort)
+        ) 
+      if(response.data === "update successful")
+      {
+        setIsEnableSnmpPressed(false)
+        DownloadRepoNames()
+      }
+    }
+
     return (
         <div>
             <MyNavbar></MyNavbar>
@@ -169,8 +251,49 @@ function Topology() {
                     onNodeClick={onNodeClick}
                     fitView
                     fitViewOptions={fitViewOptions}
-                    />
+                    />{isSnmpEnable ? <>
+                    <Form>
+                      <Form.Group as={Row} className="mb-3" controlId="formPlaintextUptime">
+                        <Form.Label column sm="2">
+                        Uptime : 
+                        </Form.Label>
+                        <Col sm="10">
+                        <Form.Control plaintext readOnly defaultValue={hostInfo?.uptime} />
+                        </Col>
+                      </Form.Group>
+
+                      <Form.Group as={Row} className="mb-3" controlId="formPlaintextLocation">
+                        <Form.Label column sm="2">
+                        Location : 
+                        </Form.Label>
+                        <Col sm="10">
+                        <Form.Control plaintext readOnly defaultValue={hostInfo?.location} />
+                        </Col>
+                      </Form.Group>
+
+                      <Form.Group as={Row} className="mb-3" controlId="Describetion">
+                        <Form.Label column sm="2">
+                        Describetion : 
+                        </Form.Label>
+                        <Col sm="10">
+                        <Form.Control plaintext readOnly defaultValue={hostInfo?.description} />
+                        </Col>
+                      </Form.Group>
+                    </Form>
+                    </>: <Button id='EnableButton' onClick={EnableSnmp}>Enable SNMP </Button>}
                 </div>
+                <EnableSnmnpModal 
+                  host={selectedRepository?.repositoryHost} 
+                  community = {community} 
+                  isShow = {isEnableSnmpPressed}
+                  handleClose = {()=>{setIsEnableSnmpPressed(false)}}
+                  handleCommunityChange = {(event)=>{setCommunity(event.target.value)}}
+                  handleConfirm = {handleConfirm}
+                  device = {selectedRepository?.repositoryDeviceType as AvailableDevice}
+                  handleUsernameChange = {(event)=>{setDeviceUsername(event.target.value)}}
+                  handlePasswordChange = {(event)=>{setDevicePassword(event.target.value)}}
+                  handlePortChange = {(event)=>{setDevicePort(event.target.value)}}
+                  ></EnableSnmnpModal>
             </div>
         </div>
     );

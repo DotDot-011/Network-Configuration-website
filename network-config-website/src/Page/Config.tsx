@@ -6,7 +6,7 @@ import MyNavbar from '../Utils/Navbar';
 import RepoList from '../Utils/Repolist';
 import './Config.css'
 import GetConfigModal from '../Utils/GetConfigModal';
-import {GetFile, GetFilePath, GetRepoNames, GetFileNames, GetConfig, UploadConfig} from '../API/API'
+import {GetRepoNames, GetFileNames, GetConfig, UploadConfig} from '../API/API'
 import FileTable from '../Utils/FileTable';
 import PageNav from '../Utils/PageNav';
 import UploadConfigModal from '../Utils/UploadConfigModal';
@@ -30,7 +30,8 @@ interface RepoInfo {
     repositoryName: string
     repositoryOwnerName: string
     repositoryTimestamp: Date
-
+    IsSnmpEnable: boolean
+    SnmpCommunity: string
 }
 
 function Config() {
