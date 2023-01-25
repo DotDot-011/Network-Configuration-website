@@ -6,7 +6,7 @@ import MyNavbar from '../Utils/Navbar';
 import RepoList from '../Utils/Repolist';
 import './Config.css'
 import GetConfigModal from '../Utils/GetConfigModal';
-import {GetRepoNames, GetFileNames, GetConfig, UploadConfig} from '../API/API'
+import {GetRepoNames, GetFileNames, GetConfig, UploadConfig, AnalyzConfig} from '../API/API'
 import FileTable from '../Utils/FileTable';
 import PageNav from '../Utils/PageNav';
 import UploadConfigModal from '../Utils/UploadConfigModal';
@@ -50,16 +50,24 @@ function Config() {
     const [toBeUploadedFile, setToBeUploadedFile] = useState<File>()
     const [toBeUploadedFileContent, setToBeUploadedFileContent] = useState("")
 
+    const [isAnalizing, setIsAnalizing] = useState<boolean>(false)
+    const [analyzeResult, setAnalyzeResult] = useState()
+
     const [currentPage, setCurrentPage] = useState(1);
     const [files, setFiles] = useState([])
     const totalPages = Math.ceil(files.length / 10);
     const [repositories, setRepositories] = useState<Array<RepoInfo>>([])
 
-    useEffect(()=> {
+    useEffect(() => {
         
         DownloadRepoNames()
         DownloadFileNames()
     }, [])
+
+    useEffect(() => {
+        setIsAnalizing(false)
+        console.log(analyzeResult)
+    }, [analyzeResult])
 
     useEffect(()=> {
 
@@ -110,6 +118,7 @@ function Config() {
 
     function handleShowUploadConfig(){
         setIsUploadConfig(true)
+        setAnalyzeResult(undefined)
     }
 
     function handleCloseUploadConfig(){
@@ -132,13 +141,16 @@ function Config() {
     function handlePageChange(page: number){
         setCurrentPage(page);
       };
-    
+
     async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>){
 
         if(event.target.files !== null)
         {
             const content = await event.target.files[0].text()
             console.log(event.target.files[0])
+            setIsAnalizing(true)
+            const response = await AnalyzConfig(localStorage.getItem("username") as string, content)
+            setAnalyzeResult(response)
             setToBeUploadedFile(event.target.files[0])
             setToBeUploadedFileContent(content)
         }
@@ -160,6 +172,11 @@ function Config() {
         const userId = localStorage.getItem("username")
         if(toBeUploadedFile === undefined){
             alert("There is no file")
+            return
+        }
+
+        if(isAnalizing){
+            alert("Wait for Analizing")
             return
         }
 
@@ -188,7 +205,7 @@ function Config() {
                         <Button onClick={handleShowUploadConfig}>Upload Config</Button>
                     </div>
                     <GetConfigModal config={config} isShow={isGetConfig} host={host} device={device_type} handleClose={handleCloseGetConfig} handleShow={handleShowGetConfig} handleConfirm={handleConfirm} handlePasswordChange={handleChangePassword} handleUsernameChange={handleChangeUsername} handlePortChange={handleChangePort}></GetConfigModal>
-                    <UploadConfigModal handleFileChange={handleFileChange} config={config} isShow={isUploadConfig} host={host} device={device_type} handleClose={handleCloseUploadConfig} handleShow={handleShowUploadConfig} handleConfirm={handleUploadConfig} handlePasswordChange={handleChangePassword} handleUsernameChange={handleChangeUsername} handlePortChange={handleChangePort}></UploadConfigModal>
+                    <UploadConfigModal AnalyzeResult={analyzeResult} handleFileChange={handleFileChange} config={config} isShow={isUploadConfig} host={host} device={device_type} handleClose={handleCloseUploadConfig} handleShow={handleShowUploadConfig} handleConfirm={handleUploadConfig} handlePasswordChange={handleChangePassword} handleUsernameChange={handleChangeUsername} handlePortChange={handleChangePort}></UploadConfigModal>
                 </header>
                 </div>
             </div>

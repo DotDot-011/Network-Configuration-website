@@ -1,6 +1,7 @@
 import React, {ChangeEvent, useState} from 'react';
 import {Modal, Button, Form, Row, Col} from 'react-bootstrap'
 import Highlight from 'react-highlight';
+import { AnalyzConfig } from '../API/API';
 
 type  AvailableDevice = "cisco_ios" | "dell_os6" | "huawei" | "zyxel_os"
 
@@ -9,6 +10,7 @@ interface props{
     host : string | undefined
     device : AvailableDevice
     config : string
+    AnalyzeResult : any
     handleClose : (() => void)
     handleShow : (() => void)
     handleConfirm : (() => void)
@@ -24,9 +26,12 @@ function UploadConfigModal(props: props) {
     <>
         <Modal show={props.isShow} onHide={props.handleClose} onChange={props.handleFileChange}>
             <Modal.Header closeButton>
-            <Modal.Title>Modal heading</Modal.Title>
+            <Modal.Title>กรอกข้อมูล Upload</Modal.Title>
             </Modal.Header>
-            <Modal.Body><input type="file" name="file" /></Modal.Body>
+            <Modal.Body><input type="file" name="file" />
+            
+            <Highlight className="json">{JSON.stringify(props.AnalyzeResult, null, 4)}</Highlight>
+            </Modal.Body>
             <Modal.Footer>
             <Form>
                 <Form.Group as={Row} className="mb-3" controlId="formPlaintextHost">

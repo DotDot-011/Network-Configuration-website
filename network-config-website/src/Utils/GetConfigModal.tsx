@@ -23,7 +23,7 @@ function GetConfigModal(props: props) {
     <>
         <Modal show={props.isShow} onHide={props.handleClose}>
             <Modal.Header closeButton>
-            <Modal.Title>Modal heading</Modal.Title>
+            <Modal.Title>กรอกข้อมูลเพื่อดึง config</Modal.Title>
             </Modal.Header>
             <Modal.Body>{props.config !== '' ? <Highlight className='cisco'>{props.config}</Highlight> : 'Do you wanna get config?'}</Modal.Body>
             <Modal.Footer>

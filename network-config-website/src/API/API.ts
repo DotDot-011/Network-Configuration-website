@@ -238,6 +238,30 @@ export async function GetInfo(
 
 }
 
+export async function AnalyzConfig(
+  username: string,
+  fileConfig: string
+){
+  const path = Url + "AnalyzeConfig"
+
+  console.log(fileConfig)
+  const config = {
+    headers: {
+      TOKEN: localStorage.getItem('TOKEN'),
+    }
+  }
+
+  const response = await axios.post(path, {
+    username: username,
+    config : fileConfig
+  }, config)
+  
+  console.log(response)
+  
+  return response.data
+
+}
+
 export async function UploadConfig(
   filename: string,
   filedata: string,

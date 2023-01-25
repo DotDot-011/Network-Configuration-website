@@ -22,6 +22,7 @@ import ReactFlow, {
   } from 'reactflow';
 import { Button, Form, Row, Col} from 'react-bootstrap';
 import EnableSnmnpModal from '../Utils/EnableSnmpModal';
+import Highlight from 'react-highlight';
 
 enum AvailableDevice {
     cisco = "cisco_ios",
@@ -252,34 +253,7 @@ function Topology() {
                     fitView
                     fitViewOptions={fitViewOptions}
                     />{isSnmpEnable ? <>
-                    <Form>
-                      <Form.Group as={Row} className="mb-3" controlId="formPlaintextUptime">
-                        <Form.Label column sm="2">
-                        Uptime : 
-                        </Form.Label>
-                        <Col sm="10">
-                        <Form.Control plaintext readOnly defaultValue={hostInfo?.uptime} />
-                        </Col>
-                      </Form.Group>
-
-                      <Form.Group as={Row} className="mb-3" controlId="formPlaintextLocation">
-                        <Form.Label column sm="2">
-                        Location : 
-                        </Form.Label>
-                        <Col sm="10">
-                        <Form.Control plaintext readOnly defaultValue={hostInfo?.location} />
-                        </Col>
-                      </Form.Group>
-
-                      <Form.Group as={Row} className="mb-3" controlId="Describetion">
-                        <Form.Label column sm="2">
-                        Describetion : 
-                        </Form.Label>
-                        <Col sm="10">
-                        <Form.Control plaintext readOnly defaultValue={hostInfo?.description} />
-                        </Col>
-                      </Form.Group>
-                    </Form>
+                    <Highlight className='JSON'>{JSON.stringify(hostInfo, null, 4)}</Highlight>
                     </>: <Button id='EnableButton' onClick={EnableSnmp}>Enable SNMP </Button>}
                 </div>
                 <EnableSnmnpModal 
