@@ -16,9 +16,10 @@ interface File {
 interface FileTableProps {
   files: File[];
   currentPage: number;
+  checkHandle: ((e: React.ChangeEvent<HTMLInputElement>) => void)
 }
 
-const FileTable: React.FC<FileTableProps> = ({ files, currentPage }) => {
+const FileTable: React.FC<FileTableProps> = ({ files, currentPage, checkHandle}) => {
   const startIndex = (currentPage - 1) * 10;
   const endIndex = startIndex + 10;
   const pageFiles = files.slice(startIndex, endIndex);
@@ -47,6 +48,7 @@ const FileTable: React.FC<FileTableProps> = ({ files, currentPage }) => {
         <tr>
           <th>Filename</th>
           <th>Timestamp</th>
+          <th>Compare</th>
         </tr>
       </thead>
       <tbody>
@@ -54,6 +56,7 @@ const FileTable: React.FC<FileTableProps> = ({ files, currentPage }) => {
             <tr key={file.fileName}>
               <td><a href={"/file/" + file.fileId}>{file.fileName}</a></td>
               <td>{new Date(file.fileTimestamp).toLocaleString()}</td>
+              <td><input type="checkbox" name={file.fileName} value={file.fileId} onChange={checkHandle}></input></td>
             </tr>
         ))}
       </tbody>

@@ -98,6 +98,8 @@ export async function GetRepoNames(username: string | null){
 export async function GetFileConfig(username: string | null, fileId: number){
     const path = Url + "getFile/" + username + "/" + fileId
 
+    console.log(path)
+    console.log(localStorage.getItem('TOKEN'))
     const config = {
         headers: {
           TOKEN: localStorage.getItem('TOKEN'),

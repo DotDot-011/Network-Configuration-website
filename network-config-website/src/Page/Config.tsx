@@ -57,12 +57,22 @@ function Config() {
     const [files, setFiles] = useState([])
     const totalPages = Math.ceil(files.length / 10);
     const [repositories, setRepositories] = useState<Array<RepoInfo>>([])
+    
+    const [compareFile, SetCompareFile] = useState<Array<Array<string>>>([])
+    
+    let numberOfFile = compareFile.length
 
     useEffect(() => {
         
         DownloadRepoNames()
         DownloadFileNames()
     }, [])
+
+    useEffect(()=> {
+
+        console.log(compareFile)
+        console.log(numberOfFile)
+    }, [compareFile])
 
     useEffect(() => {
         setIsAnalizing(false)
@@ -162,7 +172,34 @@ function Config() {
         if(id !== undefined){
             const response = await GetConfig(device_type, host, Username, Password, userId, parseInt(id))
             setConfig(response.data)
+            if(response.data !== undefined)
+            {
+                handleCloseUploadConfig()
+            }
         }
+        
+    }
+
+    function handleCheck(event: React.ChangeEvent<HTMLInputElement>){
+
+        const filename = event.target.value
+        console.log(filename[1])
+        if(event.target.checked && numberOfFile == 2)
+        {
+            event.target.checked = false
+            return
+        }
+
+        if(!event.target.checked)
+        {
+            
+            const result = compareFile.filter((fileName)=>{return fileName[0] !== filename});
+            SetCompareFile(result)
+            return
+        }
+
+        const temp = [filename]
+        SetCompareFile(compareFile.concat(temp))
         
     }
 
@@ -183,7 +220,19 @@ function Config() {
         if(id !== undefined){
             const response = await UploadConfig(toBeUploadedFile.name, toBeUploadedFileContent,device_type, host, Username, Password, userId, parseInt(id))
             setConfig(response.data)
+            handleCloseUploadConfig()
         }
+    }
+
+    function handleCompare(){
+        if (numberOfFile !== 2)
+        {
+            alert("Please select 2 file for Comparing")
+            return
+        }
+        
+        window.location.assign('/Compare/' + id + "/" + compareFile[0] + "/" + compareFile[1])
+        
     }
 
     return (
@@ -198,11 +247,12 @@ function Config() {
                 <header className="Config-menu-header">
                     <h1>Host: {host}</h1>
                     <h1>Device: {device}</h1>
-                    <FileTable files={files} currentPage={currentPage} />
+                    <FileTable files={files} currentPage={currentPage} checkHandle={handleCheck}/>
                     <PageNav totalPages={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />
                     <div className='Function-List'>
                         <Button onClick={handleShowGetConfig}>Get Config</Button>
                         <Button onClick={handleShowUploadConfig}>Upload Config</Button>
+                        <Button onClick={handleCompare}>Compare</Button>
                     </div>
                     <GetConfigModal config={config} isShow={isGetConfig} host={host} device={device_type} handleClose={handleCloseGetConfig} handleShow={handleShowGetConfig} handleConfirm={handleConfirm} handlePasswordChange={handleChangePassword} handleUsernameChange={handleChangeUsername} handlePortChange={handleChangePort}></GetConfigModal>
                     <UploadConfigModal AnalyzeResult={analyzeResult} handleFileChange={handleFileChange} config={config} isShow={isUploadConfig} host={host} device={device_type} handleClose={handleCloseUploadConfig} handleShow={handleShowUploadConfig} handleConfirm={handleUploadConfig} handlePasswordChange={handleChangePassword} handleUsernameChange={handleChangeUsername} handlePortChange={handleChangePort}></UploadConfigModal>

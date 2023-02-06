@@ -6,12 +6,14 @@ import Config from "./Page/Config";
 import LoginPage from "./Page/Login";
 import CreateRepository from "./Page/CreateRepo";
 import ShowFile from "./Page/ShowFile";
+import CompareCode from "./Page/CompareText";
 
 export default function PageRouter() {
   return (
     <Router>
       <div>
         <Routes>
+          <Route path="/" element={<CompareCode />} ></Route>
           <Route path="/login" element={<LoginPage />} ></Route>
           <Route path="/home" element={<Home />} />
           <Route path="/createRepo" element={<CreateRepository />}></Route>
@@ -19,6 +21,7 @@ export default function PageRouter() {
           <Route path="/config" element= {<Navigate to = '/home'></Navigate>} />
           <Route path="/config/:id/host/:host/:device" element={<Config />}></Route>
           <Route path="/file/:fileId" element={<ShowFile />}></Route>
+          <Route path="/Compare/:id/:fileid1/:fileid2" element={<CompareCode />}></Route>
         </Routes>
       </div>
     </Router>
