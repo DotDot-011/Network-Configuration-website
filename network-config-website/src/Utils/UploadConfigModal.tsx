@@ -2,6 +2,7 @@ import React, {ChangeEvent, useState} from 'react';
 import {Modal, Button, Form, Row, Col} from 'react-bootstrap'
 import Highlight from 'react-highlight';
 import { AnalyzConfig } from '../API/API';
+import "./UploadConfigModal.css";
 
 type  AvailableDevice = "cisco_ios" | "dell_os6" | "huawei" | "zyxel_os"
 
@@ -28,18 +29,38 @@ function UploadConfigModal(props: props) {
             {
                 return (
                     <>
-                        <li>{data[1]}</li>
+                        <li className='okay'>{data[1]}</li>
     
                     </>
                     )
+            }
+            if (data[0] == 1)
+            {
+                return (
+                    <>
+                        <li className='warning'>{data[1]}</li>
+                        <li>{data[2]}</li>
+    
+                    </>
+                    )
+            }
+            
+            if (data[0] == 0)
+            {
+                return (
+                <>
+                    <li className='danger'>{data[1]}</li>
+                    <li>{data[2]}</li>
+                </>
+                )
             }
 
             return (
                 <>
                     <li>{data[1]}</li>
-                    <li>{data[2]}</li>
                 </>
-            )
+                )
+            
         }
 
         if(typeof data === 'object'){
