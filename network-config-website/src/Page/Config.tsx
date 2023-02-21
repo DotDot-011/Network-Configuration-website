@@ -51,7 +51,7 @@ function Config() {
     const [toBeUploadedFileContent, setToBeUploadedFileContent] = useState("")
 
     const [isAnalizing, setIsAnalizing] = useState<boolean>(false)
-    const [analyzeResult, setAnalyzeResult] = useState()
+    const [analyzeResult, setAnalyzeResult] = useState({})
 
     const [currentPage, setCurrentPage] = useState(1);
     const [files, setFiles] = useState([])
@@ -128,7 +128,7 @@ function Config() {
 
     function handleShowUploadConfig(){
         setIsUploadConfig(true)
-        setAnalyzeResult(undefined)
+        setAnalyzeResult({})
     }
 
     function handleCloseUploadConfig(){
@@ -160,7 +160,7 @@ function Config() {
             console.log(event.target.files[0])
             setIsAnalizing(true)
             const response = await AnalyzConfig(localStorage.getItem("username") as string, content)
-            setAnalyzeResult(response)
+            setAnalyzeResult(response.data)
             setToBeUploadedFile(event.target.files[0])
             setToBeUploadedFileContent(content)
         }

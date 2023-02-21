@@ -22,6 +22,45 @@ interface props{
 
 function UploadConfigModal(props: props) {
 
+    function GenerateBullet(data: any){
+        if(Array.isArray(data)){
+            if (data[0] == 2)
+            {
+                return (
+                    <>
+                        <li>{data[1]}</li>
+    
+                    </>
+                    )
+            }
+
+            return (
+                <>
+                    <li>{data[1]}</li>
+                    <li>{data[2]}</li>
+                </>
+            )
+        }
+
+        if(typeof data === 'object'){
+            console.log(data)
+            return(
+                <>
+                    {Object.keys(data).map((key) => {
+                        return (
+                        <>
+                            <li>{key}</li>
+                            <ul>{GenerateBullet(data[key])}</ul>
+                        </>
+                        )
+                    })}
+                </>
+            )
+        }
+        
+        return <li>{data}</li>
+    }
+
   return (
     <>
         <Modal show={props.isShow} onHide={props.handleClose} onChange={props.handleFileChange}>
@@ -29,8 +68,10 @@ function UploadConfigModal(props: props) {
             <Modal.Title>กรอกข้อมูล Upload</Modal.Title>
             </Modal.Header>
             <Modal.Body><input type="file" name="file" />
-            
-            <Highlight className="json">{JSON.stringify(props.AnalyzeResult, null, 4)}</Highlight>
+            <ul>
+            {GenerateBullet(props.AnalyzeResult)}
+            </ul>
+            {/* <Highlight className="json">{JSON.stringify(props.AnalyzeResult, null, 4)}</Highlight> */}
             </Modal.Body>
             <Modal.Footer>
             <Form>

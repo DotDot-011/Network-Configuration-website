@@ -12,11 +12,17 @@
     display: flex;
     height: 1000px;
     width: 100%;
-    flex-wrap: wrap;
-    align-content: stretch;
-    justify-content: space-around;
+    flex-wrap: nowrap;
+    align-content: space-between;
+    flex-direction: row;
 }
 
 #EnableButton{
     height: 80px;
+}
+
+#Description{
+    width: 20%;
+    margin-top: 7%;
+    margin-left: 5%;
 }

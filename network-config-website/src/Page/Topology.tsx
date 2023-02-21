@@ -60,32 +60,58 @@ interface HostInfo{
 }
 
 function Topology() {
-    
-    const [AccessPoints, setAccessPoints] = useState<Array<AccessPoint>>([{device_type : AvailableDevice.cisco, host :'1.1.1.1'}, {device_type : AvailableDevice.cisco, host :'192.168.1.239'}])
-    const [Repositories, setRepositories] = useState<Array<RepoInfo>>([])
-    const [isSnmpEnable, setIsSnmpEnable] = useState<boolean>(false)
-    const [selectedRepository, setSelectedRepository] = useState<RepoInfo>()
-    const [isEnableSnmpPressed, setIsEnableSnmpPressed] = useState<boolean>(false)
-    const [community, setCommunity] = useState<string>("")
-    const [deviceUsername, setDeviceUsername] = useState<string>("")
-    const [devicePassword, setDevicePassword] = useState<string>("")
-    const [devicePort, setDevicePort] = useState<string>("22")
-    const [hostInfo, setHostInfo] = useState<HostInfo>()
-
-    useEffect(()=> {
-        
-      DownloadRepoNames()
-  }, [])
 
   let {id} = useParams();
+
+  const [AccessPoints, setAccessPoints] = useState<Array<AccessPoint>>([{device_type : AvailableDevice.cisco, host :'1.1.1.1'}, {device_type : AvailableDevice.cisco, host :'192.168.1.239'}])
+  const [Repositories, setRepositories] = useState<Array<RepoInfo>>([])
+  const [isSnmpEnable, setIsSnmpEnable] = useState<boolean>(false)
+  const [selectedRepository, setSelectedRepository] = useState<RepoInfo>()
+  const [isEnableSnmpPressed, setIsEnableSnmpPressed] = useState<boolean>(false)
+  const [community, setCommunity] = useState<string>("")
+  const [deviceUsername, setDeviceUsername] = useState<string>("")
+  const [devicePassword, setDevicePassword] = useState<string>("")
+  const [devicePort, setDevicePort] = useState<string>("22")
+  const [hostInfo, setHostInfo] = useState<HostInfo>()
+  const [timeString, setTimeString] = useState<string>("")
+  const [time, setTime] = useState<number>(0)
   
+  useEffect(()=> {
+      
+    DownloadRepoNames()
+
+    const interval = setInterval(() => {
+      setTime((prevCounter) => prevCounter + 1000);
+    }, 1000);
+
+    return () => clearInterval(interval);
+    
+  }, [])
+  
+  useEffect(() => {
+    if(time !== undefined)
+    {
+      const distance = time
+      // Time calculations for days, hours, minutes and seconds
+      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  
+      // Display the result in the element with id="demo"
+      setTimeString(days + "d " + hours + "h "
+      + minutes + "m " + seconds + "s ")
+    }
+
+  }, [time])
+
   useEffect(()=> {
     if(selectedRepository?.IsSnmpEnable)
     {
       console.log(selectedRepository)
       DownloadHostInfo()
     }
-
+    
   }, [selectedRepository])
 
   useEffect(()=> {
@@ -101,6 +127,13 @@ function Topology() {
     }
 
   }, [Repositories])
+
+  useEffect(()=>{
+    if(hostInfo !== undefined){
+      console.log(hostInfo)
+      setTime(hostInfo.uptime)
+    }
+  }, [hostInfo])
 
   async function DownloadHostInfo(){
     if(selectedRepository !== undefined)
@@ -253,7 +286,25 @@ function Topology() {
                     fitView
                     fitViewOptions={fitViewOptions}
                     />{isSnmpEnable ? <>
-                    <Highlight className='JSON'>{JSON.stringify(hostInfo, null, 4)}</Highlight>
+                    <ul id='Description'>
+
+                      <li>Uptime</li>
+                        <ul>
+                          <li id='time'>{timeString}</li>
+                        </ul>
+
+                      <li>Location</li>
+                        <ul>
+                          <li>{hostInfo?.location}</li>
+                        </ul>
+
+                      <li>Description</li>
+                        <ul>
+                          <li>{hostInfo?.description}</li>
+                        </ul>
+
+                    </ul>
+                    {/* <Highlight className='JSON'>{JSON.stringify(hostInfo, null, 4)}</Highlight> */}
                     </>: <Button id='EnableButton' onClick={EnableSnmp}>Enable SNMP </Button>}
                 </div>
                 <EnableSnmnpModal 
