@@ -25,7 +25,7 @@ function UploadConfigModal(props: props) {
 
     function GenerateBullet(data: any){
         if(Array.isArray(data)){
-            if (data[0] == 2)
+            if (data[0] === 2)
             {
                 return (
                     <>
@@ -34,7 +34,7 @@ function UploadConfigModal(props: props) {
                     </>
                     )
             }
-            if (data[0] == 1)
+            if (data[0] === 1)
             {
                 return (
                     <>
@@ -45,7 +45,7 @@ function UploadConfigModal(props: props) {
                     )
             }
             
-            if (data[0] == 0)
+            if (data[0] === 0)
             {
                 return (
                 <>

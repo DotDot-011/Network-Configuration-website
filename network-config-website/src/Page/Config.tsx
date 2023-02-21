@@ -184,7 +184,7 @@ function Config() {
 
         const filename = event.target.value
         console.log(filename[1])
-        if(event.target.checked && numberOfFile == 2)
+        if(event.target.checked && numberOfFile === 2)
         {
             event.target.checked = false
             return
