@@ -95,7 +95,7 @@ function UploadConfigModal(props: props) {
             {/* <Highlight className="json">{JSON.stringify(props.AnalyzeResult, null, 4)}</Highlight> */}
             </Modal.Body>
             <Modal.Footer>
-            <Form>
+            <Form className='DeviceInput'>
                 <Form.Group as={Row} className="mb-3" controlId="formPlaintextHost">
                     <Form.Label column sm="2">
                     Host
