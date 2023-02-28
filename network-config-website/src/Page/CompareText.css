@@ -1,0 +1,10 @@
+
+#AnalyzeCompare{
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+ul ul{
+    display: block;
+}

@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import ReactDiffViewer, { DiffMethod } from "react-diff-viewer";
 import { useParams, } from 'react-router-dom';
 import Highlight from 'react-highlight';
-import { GetFile, GetFileConfig, GetRepoNames} from '../API/API';
+import { GetFileConfig, GetRepoNames, AnalyzConfig} from '../API/API';
 import MyNavbar from '../Utils/Navbar';
 import RepoList from '../Utils/Repolist';
+import "./CompareText.css";
 
 interface RepoTag {
     repositoryName: string,
@@ -46,6 +47,8 @@ function CompareCode (){
     const [newFileName, setNewFileName] = useState("Version B");
     const [oldFileData, setOldFileData] = useState("");
     const [newFileData, setNewFileData] = useState("");
+    const [oldAnalyzeResult, setOldAnalyzeResult] = useState()
+    const [newAnalyzeResult, setNewAnalyzeResult] = useState()
 
     useEffect(()=>{
         
@@ -73,6 +76,14 @@ function CompareCode (){
         }
 
     }, [newFile])
+
+    useEffect(() => {
+        downloadOldAnalyzeFile()
+    }, [oldFileData])
+
+    useEffect(() => {
+        downloadNewAnalyzeFile()
+    }, [newFileData])
 
     async function DownloadRepoNames()
     {
@@ -111,9 +122,89 @@ function CompareCode (){
 
     }
 
-    const oldStr = ``
+    async function downloadNewAnalyzeFile() {
+
+        const username = localStorage.getItem("username")
+        if(username !== null)
+        {
+            const newFileResponse = await AnalyzConfig(username, newFileData)
+
+            setNewAnalyzeResult(newFileResponse.data)
+        }
+
+
+    }
+
+    async function downloadOldAnalyzeFile() {
+
+        const username = localStorage.getItem("username")
+        if(username !== null)
+        {
+            const oldFileResponse = await AnalyzConfig(username, oldFileData)
+
+            setOldAnalyzeResult(oldFileResponse.data)
+        }
+
+    }
+
+    function GenerateBullet(data: any){
+        if(Array.isArray(data)){
+            if (data[0] === 2)
+            {
+                return (
+                    <>
+                        <li className='okay'>{data[1]}</li>
     
-    const newStr = ``
+                    </>
+                    )
+            }
+            if (data[0] === 1)
+            {
+                return (
+                    <>
+                        <li className='warning'>{data[1]}</li>
+                        <li>{data[2]}</li>
+    
+                    </>
+                    )
+            }
+            
+            if (data[0] === 0)
+            {
+                return (
+                <>
+                    <li className='danger'>{data[1]}</li>
+                    <li>{data[2]}</li>
+                </>
+                )
+            }
+
+            return (
+                <>
+                    <li>{data[1]}</li>
+                </>
+                )
+            
+        }
+
+        if(typeof data === 'object'){
+            console.log(data)
+            return(
+                <>
+                    {Object.keys(data).map((key) => {
+                        return (
+                        <>
+                            <li id = {key}>{key}</li>
+                            <ul id={key + "Children"}>{GenerateBullet(data[key])}</ul>
+                        </>
+                        )
+                    })}
+                </>
+            )
+        }
+        
+        return <li>{data}</li>
+    }
 
     return (
         <div>
@@ -123,6 +214,34 @@ function CompareCode (){
                         const repo: RepoTag = {repositoryId: repository.repositoryId, repositoryName: repository.repositoryName};
                         return repo
                 })}></RepoList>
+            <div>
+                <div id = "AnalyzeCompare">
+                    <table className="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>{oldFileName}</th>
+                            <th>{newFileName}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr>
+                            <td>
+                                <ul>
+                                {GenerateBullet(oldAnalyzeResult)}
+                                </ul>
+                            </td>
+                            <td>
+                                <ul>
+                                {GenerateBullet(newAnalyzeResult)}
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                    </table>
+              
+                </div>
+            
             <ReactDiffViewer
             oldValue={oldFileData}
             newValue={newFileData}
@@ -132,9 +251,11 @@ function CompareCode (){
             rightTitle={newFileName}
             // renderContent={highlightSyntax}
             />
+            </div>
         </div>
       </div>
     )
 }
  
 export default CompareCode;
+{/* <tr><td colspan="3" class="css-17uc4if-title-block"><pre class="css-o1u8iu-content-text">EnableSnmp</pre></td><td colspan="3" class="css-17uc4if-title-block"><pre class="css-o1u8iu-content-text">demofile2.txt</pre></td></tr> */}
