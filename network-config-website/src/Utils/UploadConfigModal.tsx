@@ -88,7 +88,7 @@ function UploadConfigModal(props: props) {
 
                                 console.log(element)
                             }}>{key}</li>
-                            <ul id={key + "Children"}>{GenerateBullet(data[key])}</ul>
+                            <ul id={key + "Children"} className={"Children"}>{GenerateBullet(data[key])}</ul>
                         </>
                         )
                     })}
