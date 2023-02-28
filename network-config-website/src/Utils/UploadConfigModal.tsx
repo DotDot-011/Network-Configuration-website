@@ -70,8 +70,25 @@ function UploadConfigModal(props: props) {
                     {Object.keys(data).map((key) => {
                         return (
                         <>
-                            <li>{key}</li>
-                            <ul>{GenerateBullet(data[key])}</ul>
+                            <li id = {key} onClick={(e) => {
+
+                                const element = document.getElementById(key + "Children");
+                                if(element !== null)
+                                {
+                                    if(element.style.display === "block")
+                                    {
+                                        element.style.display = "none"
+                                    }
+                                    else
+                                    {
+                                        element.style.display = "block"
+                                    }
+                                    
+                                }
+
+                                console.log(element)
+                            }}>{key}</li>
+                            <ul id={key + "Children"}>{GenerateBullet(data[key])}</ul>
                         </>
                         )
                     })}

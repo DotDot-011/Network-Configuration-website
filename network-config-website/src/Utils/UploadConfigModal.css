@@ -13,3 +13,7 @@
 .DeviceInput{
     width: 100%
 }
+
+ul ul {
+    display: none;
+  }
