@@ -209,7 +209,7 @@ function CompareCode (){
     return (
         <div>
         <MyNavbar></MyNavbar>
-        <div className='content'>
+        <div id="wrapper">
             <RepoList Repositories = {repositories.map((repository) => {
                         const repo: RepoTag = {repositoryId: repository.repositoryId, repositoryName: repository.repositoryName};
                         return repo

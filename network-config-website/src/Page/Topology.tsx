@@ -273,8 +273,9 @@ function Topology() {
     return (
         <div>
             <MyNavbar></MyNavbar>
-            <div className='content'>
+            <div id="wrapper">
                 <RepoList Repositories = {Repositories}></RepoList>
+                <div id="page-content-wrapper">
                 <div className="Connection">
                     <ReactFlow
                     nodes={nodes}
@@ -319,6 +320,7 @@ function Topology() {
                   handlePasswordChange = {(event)=>{setDevicePassword(event.target.value)}}
                   handlePortChange = {(event)=>{setDevicePort(event.target.value)}}
                   ></EnableSnmnpModal>
+            </div>
             </div>
         </div>
     );

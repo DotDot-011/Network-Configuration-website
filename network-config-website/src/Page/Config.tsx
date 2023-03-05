@@ -238,12 +238,12 @@ function Config() {
     return (
         <div>
             <MyNavbar></MyNavbar>
-            <div className='content'>
+            <div id='wrapper'>
                 <RepoList Repositories = {repositories.map((repository) => {
                         const repo: RepoTag = {repositoryId: repository.repositoryId, repositoryName: repository.repositoryName};
                         return repo
                 })}></RepoList>
-                <div className="Config-menu">
+                <div id="page-content-wrapper">
                 <header className="Config-menu-header">
                     <h1>Host: {host}</h1>
                     <h1>Device: {device}</h1>
