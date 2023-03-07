@@ -87,7 +87,7 @@ function UploadConfigModal(props: props) {
                                 }
 
                                 console.log(element)
-                            }}>{key}</li>
+                            }}><button className="Parent btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{key}</button></li>
                             <ul id={key + "Children"} className={"Children"}>{GenerateBullet(data[key])}</ul>
                         </>
                         )

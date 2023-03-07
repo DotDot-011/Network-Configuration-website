@@ -287,24 +287,26 @@ function Topology() {
                     fitView
                     fitViewOptions={fitViewOptions}
                     />{isSnmpEnable ? <>
-                    <ul id='Description'>
+                    <div id='Description'>
+                      <ul>
 
-                      <li>Uptime</li>
-                        <ul>
-                          <li id='time'>{timeString}</li>
-                        </ul>
+                        <li className = "Bullet">Uptime</li>
+                          <ul >
+                            <li id='time' className = "Data">{timeString}</li>
+                          </ul>
 
-                      <li>Location</li>
-                        <ul>
-                          <li>{hostInfo?.location}</li>
-                        </ul>
+                        <li className = "Bullet">Location</li>
+                          <ul>
+                            <li className = "Data">{hostInfo?.location}</li>
+                          </ul>
 
-                      <li>Description</li>
-                        <ul>
-                          <li>{hostInfo?.description}</li>
-                        </ul>
+                        <li className = "Bullet">Description</li>
+                          <ul>
+                            <li className = "Data">{hostInfo?.description}</li>
+                          </ul>
 
-                    </ul>
+                      </ul>
+                    </div>
                     {/* <Highlight className='JSON'>{JSON.stringify(hostInfo, null, 4)}</Highlight> */}
                     </>: <Button id='EnableButton' onClick={EnableSnmp}>Enable SNMP </Button>}
                 </div>

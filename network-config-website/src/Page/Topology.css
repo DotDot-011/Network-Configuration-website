@@ -6,11 +6,12 @@
     background: beige;
     border: black;
     margin-top: 3%;
+    margin-left: 5%;
 }
 
 .Connection{
     display: flex;
-    height: 1000px;
+    height: 1000px !important;
     width: 100%;
     flex-wrap: nowrap;
     align-content: space-between;
@@ -22,7 +23,21 @@
 }
 
 #Description{
-    width: 20%;
-    margin-top: 7%;
+    width: 30%;
+    /* margin-top: 7%; */
+    height: 80%;
+    margin-top: 3%;
     margin-left: 5%;
+    background-color: #fafcc2;
+    /* border-left: ; */
+}
+
+.Bullet{
+    margin-left: 5%;
+    font-size: 65px;
+    color: #3d1c22;
+}
+
+.Data{
+    font-size: 40px;
 }

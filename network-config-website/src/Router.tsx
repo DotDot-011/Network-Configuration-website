@@ -13,7 +13,7 @@ export default function PageRouter() {
     <Router>
       <div>
         <Routes>
-          <Route path="/" element={<CompareCode />} ></Route>
+          <Route path="/" element={<Navigate to = '/login'></Navigate>} ></Route>
           <Route path="/login" element={<LoginPage />} ></Route>
           <Route path="/home" element={<Home />} />
           <Route path="/createRepo" element={<CreateRepository />}></Route>

@@ -2,7 +2,7 @@ import { GetFileConfig } from '../API/API';
 import React from 'react';
 import Highlight from 'react-highlight';
 import Modal from 'react-modal';
-
+import "./FileTable.css"
 interface CodeBlockProps {
   code: string;
 }
@@ -43,7 +43,7 @@ const FileTable: React.FC<FileTableProps> = ({ files, currentPage, checkHandle})
 
   return (
     <>
-    <table className ="table">
+    <table className = "table table-striped table-responsive-md btn-table">
       <thead>
         <tr>
           <th>Filename</th>

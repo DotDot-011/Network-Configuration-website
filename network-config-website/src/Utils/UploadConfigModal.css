@@ -17,3 +17,7 @@
 .Children {
     display: none;
 }
+
+.Parent{
+    width: 100%;
+}
