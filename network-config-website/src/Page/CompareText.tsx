@@ -214,7 +214,7 @@ function CompareCode (){
                         const repo: RepoTag = {repositoryId: repository.repositoryId, repositoryName: repository.repositoryName};
                         return repo
                 })}></RepoList>
-            <div>
+            <div id="page-content-wrapper">
                 <div id = "AnalyzeCompare">
                     <table className="table table-bordered">
                     <thead>

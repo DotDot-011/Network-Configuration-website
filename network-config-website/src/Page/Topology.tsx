@@ -89,6 +89,7 @@ function Topology() {
   }, [])
   
   useEffect(() => {
+    console.log(time)
     if(time !== undefined)
     {
       const distance = time
