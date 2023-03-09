@@ -1,3 +1,4 @@
+import { stat } from 'fs';
 import React, {ChangeEvent, useState} from 'react';
 import {Modal, Button, Form, Row, Col} from 'react-bootstrap'
 import Highlight from 'react-highlight';
@@ -22,6 +23,10 @@ interface props{
 }
 
 function UploadConfigModal(props: props) {
+
+    const dangerStatus = 0
+    const okayStatus = 2
+    const warningStatus = 1
 
     function GenerateBullet(data: any){
         if(Array.isArray(data)){
@@ -99,6 +104,51 @@ function UploadConfigModal(props: props) {
         return <li>{data}</li>
     }
 
+    function haveStatus(data: any, status: number): boolean{
+        if(Array.isArray(data)){
+            if(data[0] === status)
+            {
+                return true
+            }
+
+            return false
+        }
+        
+        if(typeof data === 'object'){
+            const result: boolean = Object.keys(data).reduce((accumulator, currentValue : string) => 
+            {
+                return haveStatus(data[currentValue], status) || accumulator
+            }, false)
+            
+            return result
+        }
+
+        return false
+    }
+
+    function countStatus(data: any, status: number){
+        if(Array.isArray(data)){
+            if(data[0] === status)
+            {
+                
+                return 1
+            }
+
+            return 0
+        }
+
+        if(typeof data === 'object'){
+            const result: number = Object.keys(data).reduce((accumulator, currentValue:string) => 
+            {
+                // console.log(countStatus(data[currentValue], status) + accumulator)
+                return countStatus(data[currentValue], status) + accumulator
+            }, 0)
+            return result
+        }
+
+        return 0
+    }
+
   return (
     <>
         <Modal show={props.isShow} onHide={props.handleClose} onChange={props.handleFileChange}>
@@ -106,9 +156,51 @@ function UploadConfigModal(props: props) {
             <Modal.Title>กรอกข้อมูล Upload</Modal.Title>
             </Modal.Header>
             <Modal.Body><input type="file" name="file" />
-            <ul>
+            {/* <ul>
             {GenerateBullet(props.AnalyzeResult)}
-            </ul>
+            </ul> */}
+            <div className="card border-left-danger shadow h-100 py-2">
+                                <div className="card-body">
+                                    <div className="row no-gutters align-items-center">
+                                        <div className="col mr-2">
+                                            <div className="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                                Danger Count : </div>
+                                            <div className="h5 mb-0 font-weight-bold text-gray-800">{countStatus(props.AnalyzeResult, dangerStatus)}</div>
+                                        </div>
+                                        <div className="col-auto">
+                                            <i className="fas fa-comments fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+            </div>
+            <div className="card border-left-warning shadow h-100 py-2">
+                                <div className="card-body">
+                                    <div className="row no-gutters align-items-center">
+                                        <div className="col mr-2">
+                                            <div className="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                            Warning Count : </div>
+                                            <div className="h5 mb-0 font-weight-bold text-gray-800">{countStatus(props.AnalyzeResult, warningStatus)}</div>
+                                        </div>
+                                        <div className="col-auto">
+                                            <i className="fas fa-comments fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+            </div>
+            <div className="card border-left-success shadow h-100 py-2">
+                                <div className="card-body">
+                                    <div className="row no-gutters align-items-center">
+                                        <div className="col mr-2">
+                                            <div className="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                            Okay Count : </div>
+                                            <div className="h5 mb-0 font-weight-bold text-gray-800">{countStatus(props.AnalyzeResult, okayStatus)}</div>
+                                        </div>
+                                        <div className="col-auto">
+                                            <i className="fas fa-comments fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+            </div>
             {/* <Highlight className="json">{JSON.stringify(props.AnalyzeResult, null, 4)}</Highlight> */}
             </Modal.Body>
             <Modal.Footer>

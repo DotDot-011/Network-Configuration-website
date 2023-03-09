@@ -21,3 +21,8 @@
 .Parent{
     width: 100%;
 }
+
+.card:hover{
+    background-color: gray;
+    cursor: pointer;
+}
