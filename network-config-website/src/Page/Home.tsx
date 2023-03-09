@@ -83,9 +83,7 @@ function Home() {
                     return repo
                     })}></RepoList>
                     <div id="page-content-wrapper">
-                    <Doughnut width={"30%"}
-                        data={data}
-                        />
+                    <img className='HomeImg' src={"https://play-lh.googleusercontent.com/Xv4Ze-dmrbnMgyP_2HxCrGaV5VJfe5vAk3Sekza42K1EON2J5sEVwXI8-0cB6Rmtgw"} alt="Logo" />
                     {/* <header className="App-header">
                         
                         <img src={logo} className="App-logo" alt="logo" />
