@@ -25,7 +25,7 @@ function RepoList(props : props) {
             <nav id="spy">
                 <ul className="sidebar-nav nav">
                     <li className="sidebar-brand">
-                        <a href="#home"><span className="fa fa-home solo">Repository List</span></a>
+                        <span className="fa fa-home solo">Repository List</span>
                     </li>
                     {Repositories.map((Repository) => {
                     return (<li><a href={"/config/" + Repository.repositoryId}>{Repository.repositoryName}</a></li>)

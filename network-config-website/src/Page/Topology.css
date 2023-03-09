@@ -24,12 +24,14 @@
 
 #Description{
     width: 30%;
-    /* margin-top: 7%; */
-    height: 80%;
+    height: fit-content;
     margin-top: 3%;
     margin-left: 5%;
     background-color: #fafcc2;
-    /* border-left: ; */
+}
+
+.Description{
+    margin-top: 3%;
 }
 
 .Bullet{

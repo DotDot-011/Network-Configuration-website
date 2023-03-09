@@ -241,9 +241,6 @@ function UploadConfigModal(props: props) {
                                                 Danger Count : </div>
                                             <div className="h5 mb-0 font-weight-bold text-gray-800">{countStatus(props.AnalyzeResult, dangerStatus)}</div>
                                         </div>
-                                        <div className="col-auto">
-                                            <i className="fas fa-comments fa-2x text-gray-300"></i>
-                                        </div>
                                     </div>
                                 </div>
             </div>
@@ -258,9 +255,6 @@ function UploadConfigModal(props: props) {
                                             Warning Count : </div>
                                             <div className="h5 mb-0 font-weight-bold text-gray-800">{countStatus(props.AnalyzeResult, warningStatus)}</div>
                                         </div>
-                                        <div className="col-auto">
-                                            <i className="fas fa-comments fa-2x text-gray-300"></i>
-                                        </div>
                                     </div>
                                 </div>
             </div>
@@ -274,9 +268,6 @@ function UploadConfigModal(props: props) {
                                             <div className="text-xs font-weight-bold text-success text-uppercase mb-1">
                                             Okay Count : </div>
                                             <div className="h5 mb-0 font-weight-bold text-gray-800">{countStatus(props.AnalyzeResult, okayStatus)}</div>
-                                        </div>
-                                        <div className="col-auto">
-                                            <i className="fas fa-comments fa-2x text-gray-300"></i>
                                         </div>
                                     </div>
                                 </div>

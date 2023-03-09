@@ -289,24 +289,39 @@ function Topology() {
                     fitViewOptions={fitViewOptions}
                     />{isSnmpEnable ? <>
                     <div id='Description'>
-                      <ul>
-
-                        <li className = "Bullet">Uptime</li>
-                          <ul >
-                            <li id='time' className = "Data">{timeString}</li>
-                          </ul>
-
-                        <li className = "Bullet">Location</li>
-                          <ul>
-                            <li className = "Data">{hostInfo?.location}</li>
-                          </ul>
-
-                        <li className = "Bullet">Description</li>
-                          <ul>
-                            <li className = "Data">{hostInfo?.description}</li>
-                          </ul>
-
-                      </ul>
+                        <div className="Description card border-left-info shadow h-100 py-2">
+                                            <div className="card-body">
+                                                <div className="row no-gutters align-items-center">
+                                                    <div className="col mr-2">
+                                                        <div className="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                                        Uptime : </div>
+                                                        <div className="h5 mb-0 font-weight-bold text-gray-800">{timeString}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                        </div>
+                        <div className="Description card border-left-info shadow h-100 py-2">
+                                            <div className="card-body">
+                                                <div className="row no-gutters align-items-center">
+                                                    <div className="col mr-2">
+                                                        <div className="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                                        Location : </div>
+                                                        <div className="h5 mb-0 font-weight-bold text-gray-800">{hostInfo?.location}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                        </div>
+                        <div className="Description card border-left-info shadow h-100 py-2">
+                                            <div className="card-body">
+                                                <div className="row no-gutters align-items-center">
+                                                    <div className="col mr-2">
+                                                        <div className="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                                        Description : </div>
+                                                        <div className="h5 mb-0 font-weight-bold text-gray-800">{hostInfo?.description}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                        </div>
                     </div>
                     {/* <Highlight className='JSON'>{JSON.stringify(hostInfo, null, 4)}</Highlight> */}
                     </>: <Button id='EnableButton' onClick={EnableSnmp}>Enable SNMP </Button>}
