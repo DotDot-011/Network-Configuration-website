@@ -1,9 +1,11 @@
 import { stat } from 'fs';
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, useEffect, useState} from 'react';
 import {Modal, Button, Form, Row, Col} from 'react-bootstrap'
 import Highlight from 'react-highlight';
 import { AnalyzConfig } from '../API/API';
 import "./UploadConfigModal.css";
+import { Pie, Doughnut } from "react-chartjs-2";
+import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
 
 type  AvailableDevice = "cisco_ios" | "dell_os6" | "huawei" | "zyxel_os"
 
@@ -28,6 +30,9 @@ function UploadConfigModal(props: props) {
     const okayStatus = 2
     const warningStatus = 1
 
+    function isObjectEmpty(obj : object){
+        return JSON.stringify(obj) === "{}";
+    }
     function GenerateBullet(data: any, status: number){
         if(Array.isArray(data)){
             if(!haveStatus(data, status))
@@ -73,7 +78,7 @@ function UploadConfigModal(props: props) {
         }
 
         if(typeof data === 'object' && haveStatus(data, status)){
-            console.log(data)
+            // console.log(data)
             return(
                 <>
                     {Object.keys(data).map((key) => {
@@ -215,6 +220,19 @@ function UploadConfigModal(props: props) {
             {/* <ul>
             {GenerateBullet(props.AnalyzeResult)}
             </ul> */}
+            {!isObjectEmpty(props.AnalyzeResult)?<div>
+                <Pie data = {{
+                    labels:["Danger", "Warning", "Okay"],
+                    datasets: [
+                        {
+                        label: "#",
+                        data: [countStatus(props.AnalyzeResult, dangerStatus), countStatus(props.AnalyzeResult, warningStatus), countStatus(props.AnalyzeResult, okayStatus)],
+                        backgroundColor: ["red", "yellow", "green"],
+                        }
+                    ]
+                }}></Pie>
+            </div>:<></>}
+            
             <div onClick={handleClickDangerSummary} className="card border-left-danger shadow h-100 py-2">
                                 <div className="card-body">
                                     <div className="row no-gutters align-items-center">

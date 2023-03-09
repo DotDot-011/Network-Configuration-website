@@ -6,7 +6,11 @@ import MyNavbar from '../Utils/Navbar';
 import RepoList from '../Utils/Repolist';
 import { isPropertySignature } from 'typescript';
 import { GetRepoNames } from '../API/API';
+import { MDBContainer } from "mdbreact";
+import { Pie, Doughnut } from "react-chartjs-2";
+import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
 
+Chart.register(ArcElement);
 interface RepoTag {
     repositoryName: string,
     repositoryId: number
@@ -53,6 +57,21 @@ function Home() {
         setRepositories(response.data)
     }
 
+    const data = {
+        labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          datasets: [
+            {
+              label: "test #",
+              data: [2, 5, 6, 7, 3],
+              backgroundColor: ["blue", "green", "yellow", "pink", "orange"],
+            }
+          ]
+      }
+
+      const option = {
+        title:{display:true,text:'Average Rainfall per month',fontSize:20},
+                            legend:{display:true, position:'right'}
+      }
     return (
         <div>
             <MyNavbar></MyNavbar>
@@ -64,7 +83,10 @@ function Home() {
                     return repo
                     })}></RepoList>
                     <div id="page-content-wrapper">
-                    <header className="App-header">
+                    <Doughnut width={"30%"}
+                        data={data}
+                        />
+                    {/* <header className="App-header">
                         
                         <img src={logo} className="App-logo" alt="logo" />
                         <p>
@@ -78,7 +100,7 @@ function Home() {
                         >
                         Learn React
                         </a>
-                    </header>
+                    </header> */}
                     </div>
                 </div>
             
