@@ -28,7 +28,7 @@ function UploadConfigModal(props: props) {
     const okayStatus = 2
     const warningStatus = 1
 
-    function GenerateBullet(data: any){
+    function GenerateBullet(data: any, status: number){
         if(Array.isArray(data)){
             if (data[0] === 2)
             {
@@ -68,7 +68,7 @@ function UploadConfigModal(props: props) {
             
         }
 
-        if(typeof data === 'object'){
+        if(typeof data === 'object' && haveStatus(data, status)){
             console.log(data)
             return(
                 <>
@@ -92,8 +92,8 @@ function UploadConfigModal(props: props) {
                                 }
 
                                 console.log(element)
-                            }}><button className="Parent btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{key}</button></li>
-                            <ul id={key + "Children"} className={"Children"}>{GenerateBullet(data[key])}</ul>
+                            }}><button className="Parent btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{key}</button></li>
+                            <ul id={key + "Children"} className={"Children"}>{GenerateBullet(data[key], status)}</ul>
                         </>
                         )
                     })}
@@ -173,6 +173,9 @@ function UploadConfigModal(props: props) {
                                     </div>
                                 </div>
             </div>
+            <ul>
+            {GenerateBullet(props.AnalyzeResult, dangerStatus)}
+            </ul>
             <div className="card border-left-warning shadow h-100 py-2">
                                 <div className="card-body">
                                     <div className="row no-gutters align-items-center">

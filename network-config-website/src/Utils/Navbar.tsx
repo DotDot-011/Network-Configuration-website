@@ -5,7 +5,7 @@ import "./Navbar.css"
 function MyNavbar() {
   return (
 
-        <Navbar  bg="dark" variant="dark">
+        <Navbar fixed='top' bg="dark" variant="dark">
             <Container>
                 <Navbar.Brand href='/home'>Home</Navbar.Brand>
                 <Nav>
