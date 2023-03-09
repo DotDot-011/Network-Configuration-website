@@ -30,6 +30,10 @@ function UploadConfigModal(props: props) {
 
     function GenerateBullet(data: any, status: number){
         if(Array.isArray(data)){
+            if(!haveStatus(data, status))
+            {
+                return
+            }
             if (data[0] === 2)
             {
                 return (
@@ -73,6 +77,10 @@ function UploadConfigModal(props: props) {
             return(
                 <>
                     {Object.keys(data).map((key) => {
+                        if(!haveStatus(data[key], status))
+                        {
+                            return
+                        }
                         return (
                         <>
                             <li id = {key} onClick={(e) => {
@@ -80,7 +88,7 @@ function UploadConfigModal(props: props) {
                                 const element = document.getElementById(key + "Children");
                                 if(element !== null)
                                 {
-                                    if(element.style.display === "block")
+                                    if(element.style.display === "block" || element.style.display === "")
                                     {
                                         element.style.display = "none"
                                     }
@@ -99,6 +107,10 @@ function UploadConfigModal(props: props) {
                     })}
                 </>
             )
+        }
+        
+        else{
+            return
         }
         
         return <li>{data}</li>
@@ -149,6 +161,50 @@ function UploadConfigModal(props: props) {
         return 0
     }
 
+    function handleClickDangerSummary(){
+        const element = document.getElementById("DangerResult")
+        if(element !== null)
+        {
+            if(element.style.display === "none" || element.style.display === "")
+            {
+                element.style.display = "block"
+            }
+
+            else {
+                element.style.display = "none"
+            }
+        }
+    }
+
+    function handleClickWarningSummary(){
+        const element = document.getElementById("WarningResult")
+        if(element !== null)
+        {
+            if(element.style.display === "none" || element.style.display === "")
+            {
+                element.style.display = "block"
+            }
+
+            else {
+                element.style.display = "none"
+            }
+        }
+    }
+
+    function handleClickOkaySummary(){
+        const element = document.getElementById("OkayResult")
+        if(element !== null)
+        {
+            if(element.style.display === "none" || element.style.display === "")
+            {
+                element.style.display = "block"
+            }
+
+            else {
+                element.style.display = "none"
+            }
+        }
+    }
   return (
     <>
         <Modal show={props.isShow} onHide={props.handleClose} onChange={props.handleFileChange}>
@@ -159,7 +215,7 @@ function UploadConfigModal(props: props) {
             {/* <ul>
             {GenerateBullet(props.AnalyzeResult)}
             </ul> */}
-            <div className="card border-left-danger shadow h-100 py-2">
+            <div onClick={handleClickDangerSummary} className="card border-left-danger shadow h-100 py-2">
                                 <div className="card-body">
                                     <div className="row no-gutters align-items-center">
                                         <div className="col mr-2">
@@ -173,10 +229,10 @@ function UploadConfigModal(props: props) {
                                     </div>
                                 </div>
             </div>
-            <ul>
+            <ul id = "DangerResult" className= 'AnalyzeResult'>
             {GenerateBullet(props.AnalyzeResult, dangerStatus)}
             </ul>
-            <div className="card border-left-warning shadow h-100 py-2">
+            <div onClick={handleClickWarningSummary} className="card border-left-warning shadow h-100 py-2">
                                 <div className="card-body">
                                     <div className="row no-gutters align-items-center">
                                         <div className="col mr-2">
@@ -190,7 +246,10 @@ function UploadConfigModal(props: props) {
                                     </div>
                                 </div>
             </div>
-            <div className="card border-left-success shadow h-100 py-2">
+            <ul id = "WarningResult" className= 'AnalyzeResult'>
+            {GenerateBullet(props.AnalyzeResult, warningStatus)}
+            </ul>
+            <div onClick={handleClickOkaySummary} className="card border-left-success shadow h-100 py-2">
                                 <div className="card-body">
                                     <div className="row no-gutters align-items-center">
                                         <div className="col mr-2">
@@ -204,6 +263,9 @@ function UploadConfigModal(props: props) {
                                     </div>
                                 </div>
             </div>
+            <ul id = "OkayResult" className= 'AnalyzeResult'>
+            {GenerateBullet(props.AnalyzeResult, okayStatus)}
+            </ul>
             {/* <Highlight className="json">{JSON.stringify(props.AnalyzeResult, null, 4)}</Highlight> */}
             </Modal.Body>
             <Modal.Footer>
