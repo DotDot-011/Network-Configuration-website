@@ -10,6 +10,7 @@ import {GetRepoNames, GetFileNames, GetConfig, UploadConfig, AnalyzConfig} from 
 import FileTable from '../Utils/FileTable';
 import PageNav from '../Utils/PageNav';
 import UploadConfigModal from '../Utils/UploadConfigModal';
+import Loader from '../Utils/Loader';
 
 type  AvailableDevice = "cisco_ios" | "dell_os6" | "huawei" | "zyxel_os"
 
@@ -50,6 +51,7 @@ function Config() {
     const [isUploadConfig, setIsUploadConfig] = useState(false)
     const [toBeUploadedFile, setToBeUploadedFile] = useState<File>()
     const [toBeUploadedFileContent, setToBeUploadedFileContent] = useState("")
+    const [isLoading, setIsLoading] = useState(false)
 
     const [isAnalizing, setIsAnalizing] = useState<boolean>(false)
     const [analyzeResult, setAnalyzeResult] = useState({})
@@ -80,15 +82,19 @@ function Config() {
         console.log(analyzeResult)
     }, [analyzeResult])
 
+    useEffect(()=>{
+        console.log(isLoading)
+    }, [isLoading])
+
     // useEffect(()=> {
 
     //     console.log(repositories)
 
     // }, [repositories])
 
-    useEffect(()=> {
-        console.log(getModeConfig)
-    }, [getModeConfig])
+    // useEffect(()=> {
+    //     console.log(getModeConfig)
+    // }, [getModeConfig])
 
     async function DownloadFileNames(){
 
@@ -174,12 +180,13 @@ function Config() {
     async function handleConfirm(){
         
         const userId = localStorage.getItem("username")
+        setIsLoading(true)
         if(id !== undefined){
+            
             const response = await GetConfig(device_type, host, Username, Password, userId, parseInt(id))
             setGetModeConfig(response.data)
-            if(response.data !== undefined)
-            {
-                handleCloseUploadConfig()
+            if(response.data !== undefined){
+                setIsLoading(false)
             }
         }
         
@@ -211,6 +218,7 @@ function Config() {
     async function handleUploadConfig(){
 
         console.log("upload")
+        setIsLoading(true)
         const userId = localStorage.getItem("username")
         if(toBeUploadedFile === undefined){
             alert("There is no file")
@@ -224,8 +232,16 @@ function Config() {
 
         if(id !== undefined){
             const response = await UploadConfig(toBeUploadedFile.name, toBeUploadedFileContent,device_type, host, Username, Password, userId, parseInt(id))
-            setUploadModeConfig(response.data)
-            handleCloseUploadConfig()
+            if(response.data === "upload complete")
+            {
+                setIsLoading(false)
+                handleCloseUploadConfig()
+            }
+            else{
+                setIsLoading(false)
+                alert(response.data)
+            }
+            
         }
     }
 
@@ -248,8 +264,8 @@ function Config() {
                         const repo: RepoTag = {repositoryId: repository.repositoryId, repositoryName: repository.repositoryName};
                         return repo
                 })}></RepoList>
-                <div id="page-content-wrapper">
-                <header className="Config-menu-header">
+                <div id="page-content-wrapper" >
+                <header className="Config-menu-header" >
                     <h1>Host: {host}</h1>
                     <h1>Device: {device}</h1>
                     <FileTable files={files} currentPage={currentPage} checkHandle={handleCheck}/>
@@ -259,8 +275,10 @@ function Config() {
                         <Button onClick={handleShowUploadConfig}>Upload Config</Button>
                         <Button onClick={handleCompare}>Compare</Button>
                     </div>
+                    <Loader isShow = {isLoading}></Loader>
                     <GetConfigModal config={getModeConfig} isShow={isGetConfig} host={host} device={device_type} handleClose={handleCloseGetConfig} handleShow={handleShowGetConfig} handleConfirm={handleConfirm} handlePasswordChange={handleChangePassword} handleUsernameChange={handleChangeUsername} handlePortChange={handleChangePort}></GetConfigModal>
                     <UploadConfigModal AnalyzeResult={analyzeResult} handleFileChange={handleFileChange} config={uploadModeConfig} isShow={isUploadConfig} host={host} device={device_type} handleClose={handleCloseUploadConfig} handleShow={handleShowUploadConfig} handleConfirm={handleUploadConfig} handlePasswordChange={handleChangePassword} handleUsernameChange={handleChangeUsername} handlePortChange={handleChangePort}></UploadConfigModal>
+                    
                 </header>
                 </div>
             </div>

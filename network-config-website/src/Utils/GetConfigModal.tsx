@@ -21,7 +21,7 @@ function GetConfigModal(props: props) {
 
   return (
     <>
-        <Modal show={props.isShow} onHide={props.handleClose}>
+        <Modal show={props.isShow} onHide={props.handleClose} scrollable={true}>
             <Modal.Header closeButton>
             <Modal.Title>กรอกข้อมูลเพื่อดึง config</Modal.Title>
             </Modal.Header>
